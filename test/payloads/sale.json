@@ -1,0 +1,13 @@
+{
+    "customer": "1",
+    "saleitems": [
+        {
+            "product": "1",
+            "quantity": 1
+        },
+        {
+            "product": "3",
+            "quantity": "2"
+        }
+    ]
+}
