@@ -10,6 +10,7 @@ const SalesPage = () => {
   const [saleItems, setSaleItems] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [products, setProducts] = useState([]);
+  const [overallDiscount, setOverallDiscount] = useState(0);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -62,7 +63,7 @@ const SalesPage = () => {
   };
 
   const addSaleItem = () => {
-    setSaleItems([...saleItems, { product: "", quantity: 1 }]);
+    setSaleItems([...saleItems, { product: "", quantity: 1, discount: 0 }]);
   };
 
   const handleSaleItemChange = (index, field, value) => {
@@ -82,6 +83,7 @@ const SalesPage = () => {
     const saleData = {
       customer,
       saleitems: saleItems,
+      overall_discount: overallDiscount,
     };
 
     axios
@@ -90,6 +92,7 @@ const SalesPage = () => {
         setMessage("Sale created successfully!");
         setCustomer("");
         setSaleItems([]);
+        setOverallDiscount(0);
         fetchSales();
       })
       .catch((error) => {
@@ -161,6 +164,18 @@ const SalesPage = () => {
                     min="1"
                     required
                   />
+                  <label htmlFor={`discount-${index}`}>Discount:</label>
+                  <input
+                    type="number"
+                    id={`discount-${index}`}
+                    value={item.discount}
+                    onChange={(e) =>
+                      handleSaleItemChange(index, "discount", e.target.value)
+                    }
+                    defaultValue="0"
+                    min="0"
+                    step="1"
+                  />
                   <button
                     type="button"
                     onClick={() => handleRemoveSaleItem(index)}
@@ -172,6 +187,19 @@ const SalesPage = () => {
               <button type="button" onClick={addSaleItem}>
                 Add Item
               </button>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="overall_discount">Overall Discount:</label>
+              <input
+                type="number"
+                id="overall_discount"
+                value={overallDiscount}
+                onChange={(e) => setOverallDiscount(e.target.value)}
+                defaultValue="0"
+                min="0"
+                step="1"
+              />
             </div>
 
             <button type="submit" className="submit-button">
@@ -188,6 +216,7 @@ const SalesPage = () => {
                 <th>ID</th>
                 <th>Customer</th>
                 <th>Total Amount</th>
+                <th>Overall Discount</th>
                 <th>Items</th>
               </tr>
             </thead>
@@ -198,11 +227,18 @@ const SalesPage = () => {
                     <td>{sale.id}</td>
                     <td>{sale.customer_name}</td>
                     <td>{sale.total_amount}</td>
+                    <td>{sale.overall_discount}</td>
                     <td>
                       {sale.saleitems.map((item, idx) => (
                         <div key={idx}>
                           {item.quantity} x {item.product.name} @{" "}
-                          {item.price_per_unit}
+                          {item.price_per_unit - item.discount}
+                          {item.discount > 0
+                            ? " ( - " + item.discount + " )"
+                            : ""}
+                          {/* Product: {item.product.name} Quantity: {item.quantity}
+                          , Discount: {item.discount}, Price:{" "} */}
+                          {/* {item.price_per_unit} */}
                         </div>
                       ))}
                     </td>

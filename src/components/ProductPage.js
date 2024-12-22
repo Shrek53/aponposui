@@ -8,7 +8,8 @@ const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const [buying_price, setBuyingPrice] = useState("");
+  const [selling_price, setSellingPrice] = useState("");
   const [stock, setStock] = useState("");
   const [message, setMessage] = useState("");
 
@@ -34,14 +35,14 @@ const ProductPage = () => {
   // Handle adding a new product
   const handleAddProduct = (e) => {
     e.preventDefault();
-    const productData = { name, price, stock };
+    const productData = { name, selling_price, buying_price, stock };
 
     axios
       .post("http://localhost:8000/api/products/", productData)
       .then((response) => {
         setMessage("Product added successfully!");
         setName("");
-        setPrice("");
+        setSellingPrice("");
         setStock("");
         fetchProducts(); // Refresh the product list
       })
@@ -81,12 +82,22 @@ const ProductPage = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="price">Price:</label>
+              <label htmlFor="buying_price">Buying Price:</label>
               <input
                 type="number"
-                id="price"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                id="buying_price"
+                value={buying_price}
+                onChange={(e) => setBuyingPrice(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="selling_price">Selling Price:</label>
+              <input
+                type="number"
+                id="selling_price"
+                value={selling_price}
+                onChange={(e) => setSellingPrice(e.target.value)}
                 required
               />
             </div>
@@ -114,7 +125,7 @@ const ProductPage = () => {
               <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Price</th>
+                <th>Selling Price</th>
                 <th>Stock</th>
               </tr>
             </thead>
@@ -123,7 +134,7 @@ const ProductPage = () => {
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
-                  <td>${product.price}</td>
+                  <td>${product.selling_price}</td>
                   <td>{product.stock}</td>
                 </tr>
               ))}
