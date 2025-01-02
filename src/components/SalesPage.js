@@ -202,7 +202,11 @@ const SalesPage = () => {
               />
             </div>
 
-            <button type="submit" className="submit-button">
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={saleItems.length === 0}
+            >
               Create Sale
             </button>
           </form>
